@@ -1,4 +1,4 @@
-module go-package-plantuml
+module github.com/libinghui123/go-package-plantuml
 
 go 1.14
 
