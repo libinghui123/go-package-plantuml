@@ -1,7 +1,7 @@
 package main
 
 import (
-	"git.oschina.net/jscode/go-package-plantuml/codeanalysis"
+	"go-package-plantuml/codeanalysis"
 	log "github.com/Sirupsen/logrus"
 	"fmt"
 	"github.com/jessevdk/go-flags"
@@ -16,7 +16,7 @@ func main() {
 
 	var opts struct {
 		CodeDir string `long:"codedir" description:"要扫描的代码目录" required:"true"`
-		GopathDir string `long:"gopath" description:"GOPATH目录" required:"true"`
+		GopathDir string `long:"gopath" description:"GOPATH目录"`
 		OutputFile string `long:"outputfile" description:"解析结果保存到该文件中" required:"true"`
 		IgnoreDirs []string `long:"ignoredir" description:"需要排除的目录,不需要扫描和解析"`
 	}
@@ -39,8 +39,11 @@ func main() {
 	}
 
 	if opts.GopathDir == "" {
+		opts.GopathDir = os.Getenv("GOPATH")
+	}
+
+	if opts.GopathDir == "" {
 		panic("GOPATH目录不能为空")
-		os.Exit(1)
 	}
 
 	if ! strings.HasPrefix(opts.CodeDir, opts.GopathDir) {
@@ -64,7 +67,7 @@ func main() {
 
 	result := codeanalysis.AnalysisCode(config)
 
-	result.OutputToFile("/tmp/uml.txt")
+	result.OutputToFile(opts.OutputFile)
 
 }
 
